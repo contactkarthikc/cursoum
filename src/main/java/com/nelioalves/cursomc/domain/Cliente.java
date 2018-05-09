@@ -28,6 +28,7 @@ public class Cliente implements Serializable {
 	private String email;
 	private String cpfOuCnpj;
 	// private TipoCliente tipo;
+	// aqui foi feita uma gambiarra para gravar e resgatar o código do banco 
 	private Integer tipo;
 	
 	@JsonManagedReference
