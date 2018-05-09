@@ -17,6 +17,7 @@ public class CategoriaResource {
 	@Autowired
 	private CategoriaService service;
 	
+	// Essa requisição está sendo monitorada pelo Handler (ResourceExceptionHandler.java)
 	@RequestMapping(value="/{id}",method=RequestMethod.GET)
 	private ResponseEntity<?> find(@PathVariable Integer id) {
 		Categoria obj = service.buscar(id);
