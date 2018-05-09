@@ -19,8 +19,8 @@ public class PedidoResource {
 	
 	// Essa requisição está sendo monitorada pelo Handler (ResourceExceptionHandler.java)
 	@RequestMapping(value="/{id}",method=RequestMethod.GET)
-	private ResponseEntity<?> find(@PathVariable Integer id) {
-		Pedido obj = service.buscar(id);
+	private ResponseEntity<Pedido> find(@PathVariable Integer id) {
+		Pedido obj = service.find(id);
 		return ResponseEntity.ok().body(obj);
 	}
 	
