@@ -15,7 +15,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Produto implements Serializable {
@@ -27,7 +27,7 @@ public class Produto implements Serializable {
 	private String nome;
 	private Double preco;
 	
-	@JsonBackReference // identifica que do outro lado da associação ja foram pegos os produtos. Assim, 
+	@JsonIgnore // identifica que do outro lado da associação ja foram pegos os produtos. Assim, 
 	// ele nao carrega as Categorias através do produtos. Essa é uma forma de resolver o problema de redundancia ciclica
 	// na hora de converter pra json
 	@ManyToMany
@@ -37,6 +37,8 @@ public class Produto implements Serializable {
 	)
 	private List<Categoria> categorias = new ArrayList<>();
 	
+	// ignora a serialização dos itens para o produto
+	@JsonIgnore
 	@OneToMany(mappedBy="id.produto")
 	private Set<ItemPedido> itens = new HashSet<>();
 	
@@ -49,6 +51,9 @@ public class Produto implements Serializable {
 		this.preco = preco;
 	}
 	
+	// ignora a serialização dos itens para o produto
+	// tudo que começa com get também, é serializado
+	@JsonIgnore
 	public List<Pedido> getPedidos() {
 		List<Pedido> lista = new ArrayList<>();
 		for (ItemPedido item : itens) {
