@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -31,7 +32,9 @@ public class Cliente implements Serializable {
 	// aqui foi feita uma gambiarra para gravar e resgatar o código do banco 
 	private Integer tipo;
 	
-	@OneToMany(mappedBy="cliente")
+	// cascade=CascadeType.ALL - toda alteração existente em endereços será replicada para o banco 
+	// quando cliente for salvo
+	@OneToMany(mappedBy="cliente", cascade=CascadeType.ALL)
 	private List<Endereco> enderecos = new ArrayList<>();
 	
 	// permite mapear telefones em uma tabela separada
