@@ -70,7 +70,7 @@ public class CategoriaResource {
 		return ResponseEntity.ok().body(listDto);
 	}
 	
-	// exemplo de chamada http localhost:8080/categorias/page?linesPerPage=3&page=1&direction=DESC
+	// exemplo de chamada http localhost:8080/produtos/?nome=Imp&categorias=1,4
 	@RequestMapping(value="/page", method=RequestMethod.GET)
 	private ResponseEntity<Page<CategoriaDTO>> findPage(
 			@RequestParam(name="page", defaultValue="0") Integer page, 

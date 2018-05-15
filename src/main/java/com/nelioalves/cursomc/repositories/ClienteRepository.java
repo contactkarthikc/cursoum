@@ -8,6 +8,7 @@ import com.nelioalves.cursomc.domain.Cliente;
 
 @Repository
 public interface ClienteRepository extends JpaRepository<Cliente, Integer>{
+	//https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories.query-methods
 	// forma simplificada de criar uma um método no Spring
 		//finByNOME_DO_CAMPO
 		@Transactional(readOnly=true)
