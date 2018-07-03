@@ -42,8 +42,8 @@ public class PedidoService {
 	private ClienteRepository clienteRepository;
 	
 	
-	// Na classe TesteConfig.java, tenho a anotação @Bean que instancia aqui o MockEmailService
-	// quando estou testando, nao quero realmente enviar um email, apenas imprimir no console
+	// Nas classe TesteConfig.java e DevConfig.java, tenho a anotação @Bean que instancia aqui 
+	// o MockEmailService ou o SmtpEmailService. Em Dev o email é enviado, já em Teste apenas logado
 	@Autowired
 	private EmailService emailService;
 	
