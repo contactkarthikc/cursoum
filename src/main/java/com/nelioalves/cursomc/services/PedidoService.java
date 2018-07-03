@@ -41,6 +41,12 @@ public class PedidoService {
 	@Autowired
 	private ClienteRepository clienteRepository;
 	
+	
+	// Na classe TesteConfig.java, tenho a anotação @Bean que instancia aqui o MockEmailService
+	// quando estou testando, nao quero realmente enviar um email, apenas imprimir no console
+	@Autowired
+	private EmailService emailService;
+	
 	public Pedido find(Integer id) {
 		Optional<Pedido> obj = repo.findById(id);
 		return obj.orElseThrow(() -> new ObjectNotFoundException(
@@ -67,7 +73,9 @@ public class PedidoService {
 			ip.setPedido(obj);
 		}
 		itemPedidoRepository.saveAll(obj.getItens());
-		System.out.println(obj);
+		
+		emailService.sendOrderConfirmationEmail(obj);
+		
 		return obj;
 }
 }
