@@ -11,11 +11,16 @@ import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.nelioalves.cursomc.domain.enums.EstadoPagamento;
 
 @Entity
 //mapeamento de herança --JOINED - uma tabela para cada filho. SINGLE_TABLE -> tabelao contendo os atributos do pai e dos filhos 
 @Inheritance(strategy=InheritanceType.JOINED)
+// essa anotação diz q a classe pagamento terá um campo adicional @type. 
+// esse campo será usado para definir o tipo de pagamento Cartão ou boleto
+// esse tipo será referenciado pela anotacao @JsonTypeName nas classes filhas
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "@type")
 public abstract class Pagamento implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
