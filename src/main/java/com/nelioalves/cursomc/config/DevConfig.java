@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Profile;
 
 import com.nelioalves.cursomc.services.DBService;
 import com.nelioalves.cursomc.services.EmailService;
-import com.nelioalves.cursomc.services.SMTPEmailService;
+import com.nelioalves.cursomc.services.MockEmailService;
 
 //a anotação @Configuraçtion indica algo que precisa ser rodado quando a aplicação subir
 // classe de configuração que indica que todos os Beans que estiverem dentro dessa classe
@@ -40,6 +40,7 @@ public class DevConfig {
 	
 	@Bean
 	public EmailService emailService() {
-		return new SMTPEmailService();
+		//return new SMTPEmailService();
+		return new MockEmailService();
 	}
 }
