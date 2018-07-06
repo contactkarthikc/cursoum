@@ -66,6 +66,20 @@
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>
 		</dependency>
 		
+		<!-- Login JWT  -->
+		<!-- só de incluir essa dependencia, o spring já bloqueia o acesso a tds os serviços -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+		<!-- editor html usado para enviar email no formato html  -->
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt</artifactId>
+			<version>0.7.0</version>
+		</dependency>
+		
+		
 		<!-- Banco Mysql -->
 		<dependency>
 			<groupId>mysql</groupId>
