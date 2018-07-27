@@ -7,14 +7,19 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import com.nelioalves.cursomc.security.JWTAutenticationFilter;
+import com.nelioalves.cursomc.security.JWTUtil;
 
 @Configuration
 @EnableWebSecurity
@@ -22,6 +27,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	private Environment env;
+
+	@Autowired
+	private JWTUtil jwtUtil;
+	
+	// Aqui adicionamos a interface e o Spring vai encontrar UserDatailsServiceImpl que foi a implementação feita
+	@Autowired
+	private UserDetailsService userDetailsService;
 	
 	private static final String[] PUBLIC_MATCHERS = {
 			"/h2-consoles/**"
@@ -60,8 +72,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.antMatchers(PUBLIC_MATCHERS).permitAll()
 			//para todo o resto autenticação é exigida
 			.anyRequest().authenticated();
+		
+		//registro o filtro responsável pela autenticação
+		http.addFilter(new JWTAutenticationFilter(authenticationManager(), jwtUtil));
 	}
 	
+	
+	//esse método diz para o autenticação do Spring qual é o service capaz de buscar um usuário 
+	// e qual será o passwordEncoder a ser usado
+	@Override
+	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+		auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder());
+	}
+
+
+
 	// permite acesso de origem diferente.
 	// https://docs.spring.io/spring-security/site/docs/current/apidocs/org/springframework/security/config/annotation/web/builders/HttpSecurity.html
 	 @Bean
