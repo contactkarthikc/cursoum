@@ -5,6 +5,7 @@ import java.util.Date;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
@@ -16,10 +17,12 @@ public class JWTUtil {
 	@Value("${jwt.secret}")
 	private String secret;
 	
+	
+	// recupera o tempo de expiração do application.properties
 	@Value("${jwt.expiration}")
 	private Long expiration;
 	
-	// gerar um token
+	// recebe um usuario e gerar um token
 	public String generateToken(String username) {
 		return Jwts.builder()
 				.setSubject(username)
@@ -30,5 +33,40 @@ public class JWTUtil {
 				.compact();
 	}
 	
+	
+	public boolean tokenValido(String token) {
+		// carrega as reivindicações do token
+		Claims claims = getClaims(token);
+		if(claims != null) {
+			String username = claims.getSubject();
+			Date expirationDate = claims.getExpiration();
+			Date now = new Date(System.currentTimeMillis());
+			
+			//verifico se o token expirou
+			if(username != null && expirationDate != null && now.before(expirationDate)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public String getUserName(String token) {
+		Claims claims = getClaims(token);
+		if(claims != null) 
+			return claims.getSubject();
+		return null;
+	}
+
+	private Claims getClaims(String token) {
+		try {
+			// recupera os Claims(reinvindicações) a partir de um token
+			return Jwts.parser().setSigningKey(secret.getBytes()).parseClaimsJws(token).getBody();
+		// se o tokem for inválido, retorna nulo
+		} catch (Exception e) {
+			return null;
+		}
+	}
+	
+
 	
 }

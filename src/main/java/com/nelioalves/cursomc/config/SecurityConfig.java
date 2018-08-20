@@ -18,7 +18,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import com.nelioalves.cursomc.security.JWTAutenticationFilter;
+import com.nelioalves.cursomc.security.JWTAuthenticationFilter;
+import com.nelioalves.cursomc.security.JWTAuthorizationFilter;
 import com.nelioalves.cursomc.security.JWTUtil;
 
 @Configuration
@@ -73,12 +74,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			//para todo o resto autenticação é exigida
 			.anyRequest().authenticated();
 		
-		//registro o filtro responsável pela autenticação
-		http.addFilter(new JWTAutenticationFilter(authenticationManager(), jwtUtil));
+		//registro o filtro responsável pela Autenticação
+		http.addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtUtil));
+		// registro o filtro responsável pela Autorização
+		http.addFilter(new JWTAuthorizationFilter(authenticationManager(), jwtUtil, userDetailsService));
+		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 	}
 	
 	
-	//esse método diz para o autenticação do Spring qual é o service capaz de buscar um usuário 
+	//esse método diz para o autenticação do Spring qual é o service capaz de buscar um usuário para login
 	// e qual será o passwordEncoder a ser usado
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {

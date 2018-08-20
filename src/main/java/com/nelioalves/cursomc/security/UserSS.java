@@ -10,6 +10,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.nelioalves.cursomc.domain.enums.Perfil;
 
+// vai implementar o contrato UserDetails. Essa classe é responsável por manter as informacoes de login e senha
+// além de uma série de verificações que podem ser feitas para verificar a autenticação do usuário
 public class UserSS implements UserDetails {
 
 	private static final long serialVersionUID = 1L;
@@ -18,17 +20,19 @@ public class UserSS implements UserDetails {
 	private String email;
 	private String senha;
 	
+	// lista de perfis
 	private Collection<? extends GrantedAuthority> authorities;
 	
 	public UserSS() {
 		
 	}
-	
+	// coloquei o construto recebendo direto uma lista de perfis
 	public UserSS(Integer id, String email, String senha, Set<Perfil> perfis) {
 		super();
 		this.id = id;
 		this.email = email;
 		this.senha = senha;
+		// converto a lista de perfis para uma lista de auhorities
 		this.authorities = perfis.stream().map(x -> new SimpleGrantedAuthority(x.getDescricao())).collect(Collectors.toList());
 	}
 
