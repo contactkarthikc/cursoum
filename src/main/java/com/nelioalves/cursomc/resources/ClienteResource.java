@@ -9,6 +9,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -56,12 +57,18 @@ public class ClienteResource {
 		return ResponseEntity.noContent().build();
 	}
 	
+	// indica que apenas usuarios com a role admin podem inserir uma categoria
+	// para q funcione, é preciso habilitar esse controle no SecurityConfig.java
+	@PreAuthorize("hasAnyRole('ADMIN')")
 	@RequestMapping(value="/{id}",method=RequestMethod.DELETE)
 	private ResponseEntity<Void> delete(@PathVariable Integer id) {
 		service.delete(id);
 		return ResponseEntity.noContent().build();
 	}
 	
+	// indica que apenas usuarios com a role admin podem inserir uma categoria
+	// para q funcione, é preciso habilitar esse controle no SecurityConfig.java
+	@PreAuthorize("hasAnyRole('ADMIN')")
 	@RequestMapping(method=RequestMethod.GET)
 	private ResponseEntity<List<ClienteDTO>> findAll() {
 		List<Cliente> list = service.findAll();
@@ -71,6 +78,9 @@ public class ClienteResource {
 		return ResponseEntity.ok().body(listDto);
 	}
 	
+	// indica que apenas usuarios com a role admin podem inserir uma categoria
+	// para q funcione, é preciso habilitar esse controle no SecurityConfig.java
+	@PreAuthorize("hasAnyRole('ADMIN')")
 	// exemplo de chamada http localhost:8080/categorias/page?linesPerPage=3&page=1&direction=DESC
 	@RequestMapping(value="/page", method=RequestMethod.GET)
 	private ResponseEntity<Page<ClienteDTO>> findPage(

@@ -9,6 +9,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,6 +36,9 @@ public class CategoriaResource {
 		return ResponseEntity.ok().body(obj);
 	}
 	
+	// indica que apenas usuarios com a role admin podem inserir uma categoria
+	// para q funcione, é preciso habilitar esse controle no SecurityConfig.java
+	@PreAuthorize("hasAnyRole('ADMIN')")
 	// ResponseEntity<Void> indica que minha resposta terá o corpo vazio
 	// @RequestBody - faz o objeto Json ser convertido automaticamente para o obj Java
 	@RequestMapping(method=RequestMethod.POST)
@@ -48,6 +52,9 @@ public class CategoriaResource {
 		return ResponseEntity.created(uri).build();
 	}
 	
+	// indica que apenas usuarios com a role admin podem inserir uma categoria
+	// para q funcione, é preciso habilitar esse controle no SecurityConfig.java
+	@PreAuthorize("hasAnyRole('ADMIN')")
 	@RequestMapping(value="/{id}", method=RequestMethod.PUT)
 	public ResponseEntity<Void> update(@Valid @RequestBody CategoriaDTO objDto, @PathVariable Integer id){
 		Categoria obj = service.fromDTO(objDto);
@@ -55,6 +62,9 @@ public class CategoriaResource {
 		return ResponseEntity.noContent().build();
 	}
 	
+	// indica que apenas usuarios com a role admin podem inserir uma categoria
+	// para q funcione, é preciso habilitar esse controle no SecurityConfig.java
+	@PreAuthorize("hasAnyRole('ADMIN')")
 	@RequestMapping(value="/{id}",method=RequestMethod.DELETE)
 	private ResponseEntity<Void> delete(@PathVariable Integer id) {
 		service.delete(id);
