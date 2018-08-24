@@ -33,40 +33,38 @@ public class JWTUtil {
 				.compact();
 	}
 	
-	
 	public boolean tokenValido(String token) {
 		// carrega as reivindicações do token
-		Claims claims = getClaims(token);
-		if(claims != null) {
-			String username = claims.getSubject();
-			Date expirationDate = claims.getExpiration();
-			Date now = new Date(System.currentTimeMillis());
-			
-			//verifico se o token expirou
-			if(username != null && expirationDate != null && now.before(expirationDate)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	public String getUserName(String token) {
-		Claims claims = getClaims(token);
-		if(claims != null) 
-			return claims.getSubject();
-		return null;
-	}
-
-	private Claims getClaims(String token) {
-		try {
-			// recupera os Claims(reinvindicações) a partir de um token
-			return Jwts.parser().setSigningKey(secret.getBytes()).parseClaimsJws(token).getBody();
-		// se o tokem for inválido, retorna nulo
-		} catch (Exception e) {
-			return null;
-		}
-	}
+ 		Claims claims = getClaims(token);
+ 		if (claims != null) {
+ 			String username = claims.getSubject();
+ 			Date expirationDate = claims.getExpiration();
+ 			Date now = new Date(System.currentTimeMillis());
+ 			//verifico se o token expirou
+ 			if (username != null && expirationDate != null && now.before(expirationDate)) {
+ 				return true;
+ 			}
+ 		}
+ 		return false;
+ 	}
 	
-
+	public String getUsername(String token) {
+ 		Claims claims = getClaims(token);
+ 		if (claims != null) {
+ 			return claims.getSubject();
+ 		}
+ 		return null;
+ 	}
+	
+	private Claims getClaims(String token) {
+ 		try {
+ 		// recupera os Claims(reinvindicações) a partir de um token
+ 			return Jwts.parser().setSigningKey(secret.getBytes()).parseClaimsJws(token).getBody();
+ 		}
+ 		// se o tokem for inválido, retorna nulo
+ 		catch (Exception e) {
+ 			return null;
+ 		}
+ 	}
 	
 }

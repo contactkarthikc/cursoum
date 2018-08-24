@@ -46,9 +46,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	private static final String[] PUBLIC_MATCHERS_GET = {
 			"/produtos/**",
-			"/categorias/**",
-			"/clientes/**"
+			"/categorias/**"
 	};
+	
+	private static final String[] PUBLIC_MATCHERS_POST = {
+ 			"/clientes/**"
+ 	};
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
@@ -72,6 +75,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		
 		// todos os caminhos de PUBLIC_MATCHERS_GET serão publicos, ou seja, nao precisam de autenticação
 		http.authorizeRequests()
+			.antMatchers(HttpMethod.POST, PUBLIC_MATCHERS_POST).permitAll()
 			//informando HttpMethod.GET apenas o get é publico
 			.antMatchers(HttpMethod.GET, PUBLIC_MATCHERS_GET).permitAll()
 			.antMatchers(PUBLIC_MATCHERS).permitAll()
