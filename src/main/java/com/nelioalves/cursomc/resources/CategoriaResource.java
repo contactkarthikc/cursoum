@@ -31,7 +31,7 @@ public class CategoriaResource {
 	
 	// Essa requisição está sendo monitorada pelo Handler (ResourceExceptionHandler.java)
 	@RequestMapping(value="/{id}",method=RequestMethod.GET)
-	private ResponseEntity<Categoria> find(@PathVariable Integer id) {
+	public ResponseEntity<Categoria> find(@PathVariable Integer id) {
 		Categoria obj = service.find(id);
 		return ResponseEntity.ok().body(obj);
 	}
@@ -66,13 +66,13 @@ public class CategoriaResource {
 	// para q funcione, é preciso habilitar esse controle no SecurityConfig.java
 	@PreAuthorize("hasAnyRole('ADMIN')")
 	@RequestMapping(value="/{id}",method=RequestMethod.DELETE)
-	private ResponseEntity<Void> delete(@PathVariable Integer id) {
+	public ResponseEntity<Void> delete(@PathVariable Integer id) {
 		service.delete(id);
 		return ResponseEntity.noContent().build();
 	}
 	
 	@RequestMapping(method=RequestMethod.GET)
-	private ResponseEntity<List<CategoriaDTO>> findAll() {
+	public ResponseEntity<List<CategoriaDTO>> findAll() {
 		List<Categoria> list = service.findAll();
 		// converte para um objeto DTO
 		List<CategoriaDTO> listDto = list.stream().map(obj -> new CategoriaDTO(obj)).collect(Collectors.toList());
@@ -82,7 +82,7 @@ public class CategoriaResource {
 	
 	// exemplo de chamada http localhost:8080/produtos/?nome=Imp&categorias=1,4
 	@RequestMapping(value="/page", method=RequestMethod.GET)
-	private ResponseEntity<Page<CategoriaDTO>> findPage(
+	public ResponseEntity<Page<CategoriaDTO>> findPage(
 			@RequestParam(name="page", defaultValue="0") Integer page, 
 			@RequestParam(name="linesPerPage", defaultValue="24") Integer linesPerPage, 
 			@RequestParam(name="orderBy", defaultValue="nome") String orderBy, 

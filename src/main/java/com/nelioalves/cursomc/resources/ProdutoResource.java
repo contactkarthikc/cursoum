@@ -25,14 +25,14 @@ public class ProdutoResource {
 	
 	// Essa requisição está sendo monitorada pelo Handler (ResourceExceptionHandler.java)
 	@RequestMapping(value="/{id}",method=RequestMethod.GET)
-	private ResponseEntity<Produto> find(@PathVariable Integer id) {
+	public ResponseEntity<Produto> find(@PathVariable Integer id) {
 		Produto obj = service.find(id);
 		return ResponseEntity.ok().body(obj);
 	}
 	
 	// exemplo de chamada http localhost:8080/categorias/nome?teste&page?linesPerPage=3&page=1&direction=DESC
 	@RequestMapping(method=RequestMethod.GET)
-	private ResponseEntity<Page<ProdutoDTO>> findPage(
+	public ResponseEntity<Page<ProdutoDTO>> findPage(
 			@RequestParam(name="nome", defaultValue="") String nome,
 			@RequestParam(name="categorias", defaultValue="") String categorias,
 			@RequestParam(name="page", defaultValue="0") Integer page, 

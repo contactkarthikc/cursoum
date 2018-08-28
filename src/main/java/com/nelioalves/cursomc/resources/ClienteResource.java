@@ -32,7 +32,7 @@ public class ClienteResource {
 	
 	// Essa requisição está sendo monitorada pelo Handler (ResourceExceptionHandler.java)
 	@RequestMapping(value="/{id}",method=RequestMethod.GET)
-	private ResponseEntity<Cliente> find(@PathVariable Integer id) {
+	public ResponseEntity<Cliente> find(@PathVariable Integer id) {
 		Cliente obj = service.find(id);
 		return ResponseEntity.ok().body(obj);
 	}
@@ -61,7 +61,7 @@ public class ClienteResource {
 	// para q funcione, é preciso habilitar esse controle no SecurityConfig.java
 	@PreAuthorize("hasAnyRole('ADMIN')")
 	@RequestMapping(value="/{id}",method=RequestMethod.DELETE)
-	private ResponseEntity<Void> delete(@PathVariable Integer id) {
+	public ResponseEntity<Void> delete(@PathVariable Integer id) {
 		service.delete(id);
 		return ResponseEntity.noContent().build();
 	}
@@ -70,7 +70,7 @@ public class ClienteResource {
 	// para q funcione, é preciso habilitar esse controle no SecurityConfig.java
 	@PreAuthorize("hasAnyRole('ADMIN')")
 	@RequestMapping(method=RequestMethod.GET)
-	private ResponseEntity<List<ClienteDTO>> findAll() {
+	public ResponseEntity<List<ClienteDTO>> findAll() {
 		List<Cliente> list = service.findAll();
 		// converte para um objeto DTO
 		List<ClienteDTO> listDto = list.stream().map(obj -> new ClienteDTO(obj)).collect(Collectors.toList());
@@ -83,7 +83,7 @@ public class ClienteResource {
 	@PreAuthorize("hasAnyRole('ADMIN')")
 	// exemplo de chamada http localhost:8080/categorias/page?linesPerPage=3&page=1&direction=DESC
 	@RequestMapping(value="/page", method=RequestMethod.GET)
-	private ResponseEntity<Page<ClienteDTO>> findPage(
+	public ResponseEntity<Page<ClienteDTO>> findPage(
 			@RequestParam(name="page", defaultValue="0") Integer page, 
 			@RequestParam(name="linesPerPage", defaultValue="24") Integer linesPerPage, 
 			@RequestParam(name="orderBy", defaultValue="nome") String orderBy, 
