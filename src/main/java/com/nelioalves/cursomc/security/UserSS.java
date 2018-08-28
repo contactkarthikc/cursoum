@@ -80,5 +80,11 @@ public class UserSS implements UserDetails {
 		// indica se o usuário está ativo, pode existir uma logica para tratar isso
 		return true;
 	}
+	
+	//verifica se o usuário tem determinado perfil
+	public boolean hasRole(Perfil perfil) {
+		//converto a string passada em um objeto SimpleGrantedAuthority e verifico se ja existe na lista
+		return getAuthorities().contains(new SimpleGrantedAuthority(perfil.getDescricao()));
+	}
 
 }
