@@ -49,8 +49,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			"/categorias/**"
 	};
 	
+	//metodos posts q podem ser acessado mesmo sem estar logado
 	private static final String[] PUBLIC_MATCHERS_POST = {
- 			"/clientes/**"
+ 			"/clientes/**",
+ 			"/auth/forgot/**"
  	};
 	
 	@Override
