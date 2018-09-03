@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.nelioalves.cursomc.domain.Cliente;
@@ -93,6 +94,19 @@ public class ClienteResource {
 		Page<ClienteDTO> listDto = list.map(obj -> new ClienteDTO(obj));
 		
 		return ResponseEntity.ok().body(listDto);
+	}
+	
+	// Fiz uma gambiarra para simular o uso do amazon AWS s3
+	// nesse exemplo gravo as imagens no banco h2
+	// para enviar uma imagem: endereço (post) http://localhost:8080/clientes/picture
+	// no body: retirar Content-Type; Alterar para "form-data", informar a chave "file" (igual ao name desse metodo)
+	// e selecionar o arquivo a ser gravado.
+	@RequestMapping(value="/picture", method=RequestMethod.POST)
+	public ResponseEntity<Void> uploadProfilePicture(@RequestParam(name="file")  MultipartFile file){
+		URI uri = service.uploadProfilePicture(file);
+		// semelhante ao retorno de um crud
+		// renorna a URI para acessar a imagem salva
+		return ResponseEntity.created(uri).build();
 	}
 	
 }

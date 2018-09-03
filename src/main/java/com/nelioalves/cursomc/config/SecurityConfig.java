@@ -41,17 +41,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	private UserDetailsService userDetailsService;
 	
 	private static final String[] PUBLIC_MATCHERS = {
-			"/h2-consoles/**"
+			"/h2-console/**"
 	};
 
 	private static final String[] PUBLIC_MATCHERS_GET = {
 			"/produtos/**",
-			"/categorias/**"
+			"/categorias/**",
+			"/picture/**"
 	};
 	
 	//metodos posts q podem ser acessado mesmo sem estar logado
 	private static final String[] PUBLIC_MATCHERS_POST = {
- 			"/clientes/**",
+ 			"/clientes",
+ 			"/clientes/picture",
  			"/auth/forgot/**"
  	};
 	

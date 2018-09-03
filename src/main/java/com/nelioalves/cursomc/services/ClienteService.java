@@ -1,6 +1,9 @@
 package com.nelioalves.cursomc.services;
 
 
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,10 +15,12 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.nelioalves.cursomc.domain.Cidade;
 import com.nelioalves.cursomc.domain.Cliente;
 import com.nelioalves.cursomc.domain.Endereco;
+import com.nelioalves.cursomc.domain.ProfilePicture;
 import com.nelioalves.cursomc.domain.enums.Perfil;
 import com.nelioalves.cursomc.domain.enums.TipoCliente;
 import com.nelioalves.cursomc.dto.ClienteDTO;
@@ -36,6 +41,10 @@ public class ClienteService {
 	
 	@Autowired
 	private BCryptPasswordEncoder pe;
+	
+	
+	@Autowired
+	private ProfilePictureService profilePictureService;
 	
 	// @Autowired
 	// private EnderecoRepository enderecoRepo;
@@ -111,5 +120,22 @@ public class ClienteService {
 	private void updataData(Cliente newObj, Cliente obj) {
 		newObj.setNome(obj.getNome());
 		newObj.setEmail(obj.getEmail());
+	}
+	
+	public URI uploadProfilePicture(MultipartFile multipartFile) {
+		try {
+			ProfilePicture pp = new ProfilePicture();
+			pp.setNome(multipartFile.getOriginalFilename());
+			pp.setContentType(multipartFile.getContentType());
+			pp.setArquivo(multipartFile.getBytes());
+			profilePictureService.insert(pp);
+			// retorna o endereço para acessar a imagem
+			return new URI("http://localhost:8080/picture/"+pp.getId()); 
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 }
