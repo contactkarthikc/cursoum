@@ -2,14 +2,10 @@ package com.nelioalves.cursomc.services;
 
 
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
-
-import javax.imageio.ImageIO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -57,6 +53,9 @@ public class ClienteService {
 	
 	@Value("${img.prefix.client.profile}")
 	private String prefix;
+	
+	@Value("${img.profile.size}")
+	private Integer sizeImage;
 	
 	// @Autowired
 	// private EnderecoRepository enderecoRepo;
@@ -143,27 +142,21 @@ public class ClienteService {
 		try {
 			// valida e converte a imagem caso a mesma nao seja jpg
 			BufferedImage jpgImage = imageService.getJpgImageFromFile(multipartFile);
+			jpgImage = imageService.cropSquare(jpgImage);
+			jpgImage = imageService.resize(jpgImage, sizeImage);
 			
 			//define o nome do arquivo a ser salvo
 			String fileName = this.prefix + user.getId() + ".jpg"; 
-			
-			//transforma a imagem para array de bytes
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			ImageIO.write(jpgImage, "jpg", baos);
-			baos.flush();
-			byte[] imageInByte = baos.toByteArray();
-			baos.close();
 			
 			// cria objeto que será persistido no banco
 			ProfilePicture pp = new ProfilePicture();
 			pp.setNome(fileName);
 			pp.setContentType("image/jpg");
-			pp.setArquivo(imageInByte);
+			pp.setArquivo(imageService.getImageJpgArray(jpgImage));
 			profilePictureService.insert(pp);
+			
 			// retorna o endereço para acessar a imagem
-			return new URI("http://localhost:8080/picture/"+pp.getId()); 
-		} catch (IOException e) {
-			throw new FileException("Erro ao carregar o arquivo enviado"); 
+			return new URI("http://localhost:8080/picture/"+pp.getNome()); 
 		} catch (URISyntaxException e) {
 			throw new FileException("Erro ao converter url na URI");
 		}

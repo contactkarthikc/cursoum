@@ -26,6 +26,10 @@ public class ProfilePictureService {
 				"Objeto não encontrado! Id: " + id + ", Tipo: " + ProfilePicture.class.getName()));
 	}
 	
+	public ProfilePicture findByName(String nome) {
+		return repo.findByNome(nome);
+	}
+	
 	public ProfilePicture insert(ProfilePicture obj) {
 		return repo.save(obj);
 	}

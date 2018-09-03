@@ -28,16 +28,30 @@ public class ProfilePictureResource {
 	
 	// indica o tipo de retorno, desta forma o navegador consegue renderizar a imagem
 	@GetMapping(
-			value = "/{id}",
+			value = "byId/{id}",
 			produces = MediaType.IMAGE_JPEG_VALUE
 	)
 	//@ResponseBody
 	//@RequestMapping(value="/{id}",method=RequestMethod.GET)
-	public ResponseEntity<byte[]> find(@PathVariable Integer id) {
+	public ResponseEntity<byte[]> findById(@PathVariable Integer id) {
 		HttpHeaders headers = new HttpHeaders();
 	    headers.setCacheControl(CacheControl.noCache().getHeaderValue());
 		
 		ProfilePicture obj = service.find(id);
+	    return new ResponseEntity<>(obj.getArquivo(), headers, HttpStatus.OK);
+	}
+	
+	
+	// metodo get padrao semelhante ao servico da amazon
+	@GetMapping(
+			value = "{nomeArquivo}",
+			produces = MediaType.IMAGE_JPEG_VALUE
+	)
+	public ResponseEntity<byte[]> findByName(@PathVariable String nomeArquivo) {
+		HttpHeaders headers = new HttpHeaders();
+	    headers.setCacheControl(CacheControl.noCache().getHeaderValue());
+		
+		ProfilePicture obj = service.findByName(nomeArquivo);
 	    return new ResponseEntity<>(obj.getArquivo(), headers, HttpStatus.OK);
 	}
 }
