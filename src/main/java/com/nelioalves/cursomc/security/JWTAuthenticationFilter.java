@@ -72,6 +72,8 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 		// coloco o token no cabeçalho da requisição
 		//deve serguir esse padrao
 		res.addHeader("Authorization", "Bearer " + token);
+		// expoe o cabeçalho que será passada uma authorization. Necessário para ser aceito no mecanismo de cors
+		res.addHeader("access-control-expose-headers", "Authorization");
 	}
 	
 	private class JWTAuthenticationFailureHandler implements AuthenticationFailureHandler {

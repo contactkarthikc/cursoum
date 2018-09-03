@@ -40,6 +40,8 @@ public class AuthResource {
 		String token = jwtUtil.generateToken(user.getUsername());
 		// adiciono o token na resposta
 		response.addHeader("Authorization", "Bearer " + token);
+		// expoe o cabeçalho que será passada uma authorization. Necessário para ser aceito no mecanismo de cors
+		response.addHeader("access-control-expose-headers", "Authorization");
 		return ResponseEntity.noContent().build();
 	}
 	
