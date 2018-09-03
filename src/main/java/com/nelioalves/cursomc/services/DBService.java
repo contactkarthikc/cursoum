@@ -1,12 +1,19 @@
 package com.nelioalves.cursomc.services;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.nelioalves.cursomc.domain.Categoria;
 import com.nelioalves.cursomc.domain.Cidade;
@@ -19,6 +26,7 @@ import com.nelioalves.cursomc.domain.PagamentoComBoleto;
 import com.nelioalves.cursomc.domain.PagamentoComCartao;
 import com.nelioalves.cursomc.domain.Pedido;
 import com.nelioalves.cursomc.domain.Produto;
+import com.nelioalves.cursomc.domain.ProfilePicture;
 import com.nelioalves.cursomc.domain.enums.EstadoPagamento;
 import com.nelioalves.cursomc.domain.enums.Perfil;
 import com.nelioalves.cursomc.domain.enums.TipoCliente;
@@ -54,6 +62,8 @@ public class DBService {
 	private PagamentoRepository pagamentoRepository;
 	@Autowired
 	private ItemPedidoRepository itemPedidoRepository;
+	@Autowired
+	private ProfilePictureService profilePictureService;
 
 	public void instantiateTestDatabase() throws ParseException {
 		Categoria cat1 = new Categoria(null, "Informáticao");
@@ -156,5 +166,25 @@ public class DBService {
 		p3.getItens().add(ip2);
 		
 		itemPedidoRepository.saveAll(Arrays.asList(ip1, ip2, ip3));
+		
+		try {
+		//incluindo as imagens
+			File caminho = new File("src/main/resources/static/imagens");
+			File[] arquivos = caminho.listFiles(); //retorna um array de Files
+			//String[] nomes = f.list(); //retorna o nome dos arquivos em Strings
+			for(File f : arquivos){
+				//MultipartFile multipartFile = new MockMultipartFile(f.getName(), new FileInputStream(f));
+				String ext = FilenameUtils.getExtension(f.getName());
+				ProfilePicture pp = new ProfilePicture();
+				pp.setNome(f.getName());
+				pp.setContentType("image/"+ext);
+				pp.setArquivo(Files.readAllBytes(f.toPath()));
+				profilePictureService.insert(pp);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		
 	}
 }

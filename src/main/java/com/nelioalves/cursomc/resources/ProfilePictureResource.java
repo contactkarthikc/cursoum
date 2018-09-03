@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.nelioalves.cursomc.domain.ProfilePicture;
 import com.nelioalves.cursomc.services.ProfilePictureService;
+import com.nelioalves.cursomc.services.exceptions.ObjectNotFoundException;
 
 /**
  *	Esse resource é uma solução paleativa que tenta simular o serviço do Amazon S3.
@@ -52,6 +53,11 @@ public class ProfilePictureResource {
 	    headers.setCacheControl(CacheControl.noCache().getHeaderValue());
 		
 		ProfilePicture obj = service.findByName(nomeArquivo);
-	    return new ResponseEntity<>(obj.getArquivo(), headers, HttpStatus.OK);
+		if (obj==null)
+			throw new ObjectNotFoundException("Imagem não encontrada");
+		
+		return new ResponseEntity<>(obj.getArquivo(), headers, HttpStatus.OK);
+		
+		
 	}
 }
