@@ -79,6 +79,13 @@
 			<version>0.7.0</version>
 		</dependency>
 		
+		<!-- permite entre outras coisas trabalhar trabalhar com arquivos -->
+		<dependency>
+		    <groupId>commons-io</groupId>
+		    <artifactId>commons-io</artifactId>
+		    <version>2.6</version>
+		</dependency>
+		
 		
 		<!-- Banco Mysql -->
 		<dependency>

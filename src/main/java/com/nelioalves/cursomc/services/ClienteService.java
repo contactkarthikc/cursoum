@@ -1,13 +1,18 @@
 package com.nelioalves.cursomc.services;
 
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
 
+import javax.imageio.ImageIO;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -29,6 +34,7 @@ import com.nelioalves.cursomc.repositories.ClienteRepository;
 import com.nelioalves.cursomc.security.UserSS;
 import com.nelioalves.cursomc.services.exceptions.AuthorizationException;
 import com.nelioalves.cursomc.services.exceptions.DataIntegrityException;
+import com.nelioalves.cursomc.services.exceptions.FileException;
 import com.nelioalves.cursomc.services.exceptions.ObjectNotFoundException;
 
 @Service
@@ -45,6 +51,12 @@ public class ClienteService {
 	
 	@Autowired
 	private ProfilePictureService profilePictureService;
+	
+	@Autowired
+	private ImageService imageService;
+	
+	@Value("${img.prefix.client.profile}")
+	private String prefix;
 	
 	// @Autowired
 	// private EnderecoRepository enderecoRepo;
@@ -123,19 +135,37 @@ public class ClienteService {
 	}
 	
 	public URI uploadProfilePicture(MultipartFile multipartFile) {
+		UserSS user = UserService.authenticated();
+		if(user==null) {
+			throw new AuthorizationException("Acesso Negado");
+		}
+		
 		try {
+			// valida e converte a imagem caso a mesma nao seja jpg
+			BufferedImage jpgImage = imageService.getJpgImageFromFile(multipartFile);
+			
+			//define o nome do arquivo a ser salvo
+			String fileName = this.prefix + user.getId() + ".jpg"; 
+			
+			//transforma a imagem para array de bytes
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			ImageIO.write(jpgImage, "jpg", baos);
+			baos.flush();
+			byte[] imageInByte = baos.toByteArray();
+			baos.close();
+			
+			// cria objeto que será persistido no banco
 			ProfilePicture pp = new ProfilePicture();
-			pp.setNome(multipartFile.getOriginalFilename());
-			pp.setContentType(multipartFile.getContentType());
-			pp.setArquivo(multipartFile.getBytes());
+			pp.setNome(fileName);
+			pp.setContentType("image/jpg");
+			pp.setArquivo(imageInByte);
 			profilePictureService.insert(pp);
 			// retorna o endereço para acessar a imagem
 			return new URI("http://localhost:8080/picture/"+pp.getId()); 
 		} catch (IOException e) {
-			e.printStackTrace();
+			throw new FileException("Erro ao carregar o arquivo enviado"); 
 		} catch (URISyntaxException e) {
-			e.printStackTrace();
+			throw new FileException("Erro ao converter url na URI");
 		}
-		return null;
 	}
 }
