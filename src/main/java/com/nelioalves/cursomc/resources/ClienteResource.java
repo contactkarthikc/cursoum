@@ -38,6 +38,13 @@ public class ClienteResource {
 		return ResponseEntity.ok().body(obj);
 	}
 	
+	// exemplo de chamada http://localhost:8080/clientes/email?value=paulo.fernandes@yahoo.com.br
+	@RequestMapping(value="/email", method=RequestMethod.GET)
+	public ResponseEntity<Cliente> find(@RequestParam(value="value") String email) {
+		Cliente obj = service.findByEmail(email);
+		return ResponseEntity.ok().body(obj);
+	}
+	
 	// ResponseEntity<Void> indica que minha resposta terá o corpo vazio
 	// @RequestBody - faz o objeto Json ser convertido automaticamente para o obj Java
 	@RequestMapping(method=RequestMethod.POST)
