@@ -109,7 +109,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	  CorsConfigurationSource corsConfigurationSource() {
 	    final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 	    CorsConfiguration configuration = new CorsConfiguration().applyPermitDefaultValues();
-	    // lista de metodos que sao permitidos CORS
+	    // lista de metodos que sao permitidos CORS. Isso é necessário informar, caso contrario pode dar problemas com o PUT e DELETE
 	    configuration.setAllowedMethods(Arrays.asList("POST", "GET", "PUT", "DELETE", "OPTIONS"));
 	    
 	    
